@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Elektronik Cheat-Sheet – CO₂-Station</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #222; padding: 40px; max-width: 860px; margin: 0 auto; }
+
+        h1 { font-size: 1.4rem; font-weight: 600; color: #333; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .subtitle { font-size: 0.85rem; color: #999; margin-bottom: 36px; }
+
+        .karte { background: white; border-radius: 6px; padding: 24px 30px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .karte h2 { font-size: 0.8rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px; }
+        p { font-size: 0.92rem; color: #444; line-height: 1.6; margin-bottom: 12px; }
+        p:last-child { margin-bottom: 0; }
+
+        /* Tabellen */
+        table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+        th { text-align: left; padding: 8px 12px; color: #888; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #eee; }
+        td { padding: 9px 12px; border-bottom: 1px solid #f0f0f0; color: #333; }
+        tr:last-child td { border-bottom: none; }
+        td code { background: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; color: #555; }
+        td.warn { color: #e74c3c; font-weight: 600; }
+        td.good { color: #2ecc71; font-weight: 600; }
+
+        /* Takt-Grafik */
+        .takt-wrap { margin: 16px 0 8px; }
+        .takt-label { font-size: 0.75rem; color: #999; margin-bottom: 6px; }
+
+        /* Pinout-Grafik */
+        .pinout { display: flex; gap: 6px; flex-direction: column; margin-top: 12px; }
+        .pin-row { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; }
+        .pin-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: white; flex-shrink: 0; }
+        .pin-vcc  { background: #e74c3c; }
+        .pin-gnd  { background: #333; }
+        .pin-sda  { background: #3498db; }
+        .pin-scl  { background: #9b59b6; }
+        .pin-info { color: #555; }
+        .pin-info strong { color: #222; }
+
+        /* I2C Bus Grafik */
+        .bus-wrap { margin-top: 16px; }
+
+        /* Hex Tabelle Highlight */
+        .hex-highlight { background: #f9f9f9; }
+
+        .hinweis { background: #fff8f0; border-left: 3px solid #f39c12; padding: 12px 16px; border-radius: 0 4px 4px 0; font-size: 0.88rem; color: #555; margin-top: 12px; }
+        .hinweis strong { color: #e67e22; }
+    </style>
+</head>
+<body>
+
+<h1>Elektronik Cheat-Sheet</h1>
+<p class="subtitle">CO₂-Station · Raspberry Pi 5 + Pimoroni SCD41 Breakout · Stand Juni 2026</p>
+
+<!-- KABEL & PINS -->
+<div class="karte">
+    <h2>Die 4 Kabel – Was steckt wohin?</h2>
+    <p>Der Pimoroni SCD41 Breakout (PIM587) braucht genau 4 Verbindungen zum Raspberry Pi, hergestellt über die bestellten Female-Female Jumper-Kabel.</p>
+
+    <div class="pinout">
+        <div class="pin-row">
+            <div class="pin-dot pin-vcc">VCC</div>
+            <div class="pin-info"><strong>Pin 1</strong> · 3.3V · Stromversorgung für den Sensor</div>
+        </div>
+        <div class="pin-row">
+            <div class="pin-dot pin-gnd">GND</div>
+            <div class="pin-info"><strong>Pin 6</strong> · Masse · Minus-Pol, schließt den Stromkreis</div>
+        </div>
+        <div class="pin-row">
+            <div class="pin-dot pin-sda">SDA</div>
+            <div class="pin-info"><strong>Pin 3</strong> · Serial Data · Hier fließen die Messwerte (CO₂, Temp, Hum)</div>
+        </div>
+        <div class="pin-row">
+            <div class="pin-dot pin-scl">SCL</div>
+            <div class="pin-info"><strong>Pin 5</strong> · Serial Clock · Takt – gibt den Übertragungsrhythmus vor</div>
+        </div>
+    </div>
+
+    <div class="hinweis">
+        <strong>Achtung:</strong> Immer auf 3.3V (Pin 1) stecken, nicht auf 5V (Pin 2/4). Der SCD-41 verträgt keine 5V und kann dabei kaputtgehen. Im Zweifel: <strong>pinout.xyz</strong> aufrufen.
+    </div>
+</div>
+
+<!-- TAKT -->
+<div class="karte">
+    <h2>Was ist ein Takt?</h2>
+    <p>Ein Takt ist ein Signal das regelmäßig zwischen 0 und 1 wechselt – wie ein Metronom. Jedes Mal wenn es auf 1 springt, darf ein Bit übertragen werden.</p>
+
+    <div class="takt-wrap">
+        <div class="takt-label">SCL – Takt (Metronom)</div>
+        <svg viewBox="0 0 500 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;">
+            <line x1="0" y1="50" x2="500" y2="50" stroke="#eee" stroke-width="1"/>
+            <polyline points="10,50 10,15 70,15 70,50 130,50 130,15 190,15 190,50 250,50 250,15 310,15 310,50 370,50 370,15 430,15 430,50 490,50"
+                      fill="none" stroke="#9b59b6" stroke-width="2"/>
+            <text x="10" y="58" font-size="9" fill="#aaa">0</text>
+            <text x="70" y="58" font-size="9" fill="#aaa">1</text>
+            <text x="130" y="58" font-size="9" fill="#aaa">2</text>
+            <text x="190" y="58" font-size="9" fill="#aaa">3</text>
+            <text x="250" y="58" font-size="9" fill="#aaa">4</text>
+            <text x="310" y="58" font-size="9" fill="#aaa">5</text>
+            <text x="370" y="58" font-size="9" fill="#aaa">6</text>
+        </svg>
+    </div>
+
+    <div class="takt-label" style="margin-top:12px;">SDA – Daten (synchron zum Takt)</div>
+    <svg viewBox="0 0 500 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;">
+        <line x1="0" y1="50" x2="500" y2="50" stroke="#eee" stroke-width="1"/>
+        <polyline points="10,50 10,15 70,15 70,50 130,50 130,50 190,50 190,15 250,15 250,50 310,50 310,15 370,15 370,15 430,15 430,50 490,50"
+                  fill="none" stroke="#3498db" stroke-width="2"/>
+        <text x="35" y="11" font-size="9" fill="#3498db">1</text>
+        <text x="155" y="46" font-size="9" fill="#3498db">0</text>
+        <text x="215" y="11" font-size="9" fill="#3498db">1</text>
+        <text x="275" y="46" font-size="9" fill="#3498db">0</text>
+        <text x="335" y="11" font-size="9" fill="#3498db">1</text>
+        <text x="395" y="11" font-size="9" fill="#3498db">1</text>
+    </svg>
+
+    <p style="margin-top:12px;">Der Pi gibt den Takt vor (Master), der SCD-41 richtet sich danach (Slave). Ohne Takt würden Bits unkontrolliert ankommen – wie ein Gespräch wo beide gleichzeitig reden.</p>
+</div>
+
+<!-- I2C -->
+<div class="karte">
+    <h2>I2C – Das Kommunikationsprotokoll</h2>
+    <p>I2C (gesprochen: "I-squared-C") ist die vereinbarte Sprache zwischen Pi und Sensor. Besonderheit: mehrere Geräte können an denselben zwei Kabeln hängen – jedes hat eine eindeutige Adresse.</p>
+
+    <div class="bus-wrap">
+        <svg viewBox="0 0 620 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:620px;margin-top:8px;">
+            <!-- Bus-Leitungen -->
+            <line x1="80" y1="45" x2="580" y2="45" stroke="#9b59b6" stroke-width="2"/>
+            <line x1="80" y1="75" x2="580" y2="75" stroke="#3498db" stroke-width="2"/>
+            <text x="10" y="49" font-size="10" fill="#9b59b6" font-weight="600">SCL</text>
+            <text x="10" y="79" font-size="10" fill="#3498db" font-weight="600">SDA</text>
+
+            <!-- Pi (Master) -->
+            <rect x="80" y="20" width="100" height="70" rx="5" fill="white" stroke="#ddd" stroke-width="1.5"/>
+            <text x="130" y="52" font-size="10" fill="#333" text-anchor="middle" font-weight="600">Raspberry Pi</text>
+            <text x="130" y="66" font-size="9" fill="#999" text-anchor="middle">Master</text>
+            <line x1="130" y1="90" x2="130" y2="45" stroke="#9b59b6" stroke-width="1.5" stroke-dasharray="3,2"/>
+            <line x1="130" y1="90" x2="130" y2="75" stroke="#3498db" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+            <!-- SCD-41 -->
+            <rect x="280" y="20" width="100" height="70" rx="5" fill="white" stroke="#ddd" stroke-width="1.5"/>
+            <text x="330" y="48" font-size="10" fill="#333" text-anchor="middle" font-weight="600">Pimoroni SCD41</text>
+            <text x="330" y="62" font-size="9" fill="#999" text-anchor="middle">CO₂-Sensor</text>
+            <text x="330" y="76" font-size="9" fill="#2ecc71" text-anchor="middle">0x62</text>
+            <line x1="330" y1="90" x2="330" y2="75" stroke="#3498db" stroke-width="1.5" stroke-dasharray="3,2"/>
+            <line x1="330" y1="20" x2="330" y2="45" stroke="#9b59b6" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+            <!-- Zukünftig: SPS30 -->
+            <rect x="460" y="20" width="100" height="70" rx="5" fill="white" stroke="#eee" stroke-width="1.5"/>
+            <text x="510" y="48" font-size="10" fill="#bbb" text-anchor="middle" font-weight="600">SPS30</text>
+            <text x="510" y="62" font-size="9" fill="#ccc" text-anchor="middle">PM2.5 (Phase 3)</text>
+            <text x="510" y="76" font-size="9" fill="#ccc" text-anchor="middle">0x69</text>
+            <line x1="510" y1="90" x2="510" y2="75" stroke="#ddd" stroke-width="1.5" stroke-dasharray="3,2"/>
+            <line x1="510" y1="20" x2="510" y2="45" stroke="#ddd" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+            <text x="510" y="118" font-size="9" fill="#ccc" text-anchor="middle">später, selbe 2 Kabel</text>
+        </svg>
+    </div>
+
+    <p>In Python wird der Sensor über seine Adresse gefunden – automatisch, du musst nichts eintippen:</p>
+    <pre style="background:#f5f5f5;padding:12px 16px;border-radius:4px;font-size:0.83rem;color:#555;margin-top:8px;overflow-x:auto;">i2c = board.I2C()
+sensor = adafruit_scd4x.SCD4X(i2c)   # sucht automatisch nach 0x62</pre>
+</div>
+
+<!-- HEXADEZIMAL -->
+<div class="karte">
+    <h2>Hexadezimal – Warum 0x62?</h2>
+    <p>Das <code>0x</code> vor einer Zahl bedeutet: diese Zahl ist hexadezimal (16er-System, nicht 10er). In der Elektronik ist das der Standard für Adressen und technische Werte.</p>
+
+    <table style="margin-top:12px;">
+        <tr><th>System</th><th>Basis</th><th>Ziffern</th><th>Beispiel</th></tr>
+        <tr><td>Dezimal</td><td>10</td><td>0–9</td><td>98</td></tr>
+        <tr class="hex-highlight"><td>Hexadezimal</td><td>16</td><td>0–9, A–F</td><td>0x62</td></tr>
+        <tr><td>Binär</td><td>2</td><td>0, 1</td><td>01100010</td></tr>
+    </table>
+
+    <p style="margin-top:14px;"><strong>0x62 umrechnen:</strong> 6 × 16 + 2 = <strong>98</strong> (Dezimal) – das ist die Hausnummer des SCD-41 auf dem I2C-Bus.</p>
+    <p>Siehst du irgendwo im Code <code>0x...</code>, ist das immer eine Adresse oder ein technischer Festwert – kein Rechenfehler.</p>
+</div>
+
+<!-- GPIO -->
+<div class="karte">
+    <h2>GPIO – Die 40 Pins am Raspberry Pi</h2>
+    <p>GPIO steht für General Purpose Input/Output. Die meisten Pins sind frei programmierbar – du entscheidest per Python was sie tun. Einige sind aber fest belegt.</p>
+
+    <table>
+        <tr><th>Typ</th><th>Beispiel-Pins</th><th>Aufgabe</th></tr>
+        <tr><td>3.3V</td><td>Pin 1</td><td>Feste Stromversorgung – immer an</td></tr>
+        <tr><td>5V</td><td>Pin 2, 4</td><td>Feste Stromversorgung – immer an</td></tr>
+        <tr><td>GND</td><td>Pin 6, 9, ...</td><td>Masse – immer verfügbar</td></tr>
+        <tr><td>GPIO</td><td>Pin 7, 11, ...</td><td>Frei programmierbar</td></tr>
+        <tr><td>I2C SDA</td><td><strong>Pin 3</strong></td><td>Fest für I2C reserviert</td></tr>
+        <tr><td>I2C SCL</td><td><strong>Pin 5</strong></td><td>Fest für I2C reserviert</td></tr>
+    </table>
+
+    <div class="hinweis" style="margin-top:16px;">
+        Vollständige Pinbelegung immer auf <strong>pinout.xyz</strong> nachschlagen – besonders bevor du einen neuen Sensor anschließt.
+    </div>
+</div>
+
+<p style="font-size:0.8rem;color:#bbb;margin-top:8px;">CO₂-Kartierungsroboter · Projekt Ole Meißner · Universität Stuttgart</p>
+
+</body>
+</html>

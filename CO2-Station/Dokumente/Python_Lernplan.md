@@ -1,6 +1,5 @@
 # Python-Lernplan – CO₂-Messstation
 
----
 
 
 ## Woche 1 – Setup & Python-Grundlagen

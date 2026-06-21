@@ -48,10 +48,6 @@ Project Structure
 CO2-Station/
 ├── Skripte/
 │   └── dashboard.py       # Flask web dashboard
-├── Übungen/
-│   ├── woche1.py          # Week 1 exercises
-│   ├── woche2.py          # Week 2 exercises + CSV logging
-│   └── messungen.csv      # Measurement data
 └── Dokumente/
     ├── Projektplan.md
     ├── Python_Lernplan.md

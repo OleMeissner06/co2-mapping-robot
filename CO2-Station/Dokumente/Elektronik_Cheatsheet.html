@@ -51,8 +51,8 @@
 </head>
 <body>
 
-<h1>Elektronik Cheat-Sheet</h1>
-<p class="subtitle">CO₂-Station · Raspberry Pi 5 + Pimoroni SCD41 Breakout · Stand Juni 2026</p>
+<h1>Projekt Cheat-Sheet</h1>
+<p class="subtitle">CO₂-Kartierungsroboter · Raspberry Pi 5 + Pimoroni SCD41 · Stand Juni 2026</p>
 
 <!-- KABEL & PINS -->
 <div class="karte">
@@ -199,6 +199,98 @@ sensor = adafruit_scd4x.SCD4X(i2c)   # sucht automatisch nach 0x62</pre>
     <div class="hinweis" style="margin-top:16px;">
         Vollständige Pinbelegung immer auf <strong>pinout.xyz</strong> nachschlagen – besonders bevor du einen neuen Sensor anschließt.
     </div>
+</div>
+
+<!-- SIGNALE & SPANNUNG -->
+<div class="karte">
+    <h2>Digitale Signale – HIGH & LOW</h2>
+    <p>Der Pi kommuniziert nicht mit Buchstaben oder Zahlen direkt – er kennt nur zwei Zustände auf jedem Pin:</p>
+
+    <table style="margin-top:8px;">
+        <tr><th>Zustand</th><th>Spannung</th><th>Bedeutung</th></tr>
+        <tr><td><strong>HIGH</strong></td><td>~3.3V</td><td>Bit = 1</td></tr>
+        <tr><td><strong>LOW</strong></td><td>~0V</td><td>Bit = 0</td></tr>
+    </table>
+
+    <p style="margin-top:14px;">SDA wechselt im Rhythmus des Takts zwischen HIGH und LOW. Jeder Wechsel ist ein Bit. Erst 8 Bits zusammen (= 1 Byte) ergeben eine lesbare Zahl.</p>
+
+    <div class="takt-wrap" style="margin-top:8px;">
+        <div class="takt-label">SDA – Beispiel: Byte 0x62 (Adresse des SCD41)</div>
+        <svg viewBox="0 0 520 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;">
+            <line x1="0" y1="58" x2="520" y2="58" stroke="#eee" stroke-width="1"/>
+            <!-- bits: 0 1 1 0 0 0 1 0 = 0x62 -->
+            <polyline points="10,58 10,58 70,58 70,15 130,15 190,15 190,58 250,58 310,58 370,58 370,15 430,15 430,58 490,58"
+                      fill="none" stroke="#3498db" stroke-width="2"/>
+            <text x="35" y="52" font-size="9" fill="#aaa">0</text>
+            <text x="95" y="22" font-size="9" fill="#3498db">1</text>
+            <text x="155" y="22" font-size="9" fill="#3498db">1</text>
+            <text x="215" y="52" font-size="aaa" fill="#aaa" font-size="9">0</text>
+            <text x="275" y="52" font-size="9" fill="#aaa">0</text>
+            <text x="335" y="52" font-size="9" fill="#aaa">0</text>
+            <text x="395" y="22" font-size="9" fill="#3498db">1</text>
+            <text x="455" y="52" font-size="9" fill="#aaa">0</text>
+            <text x="10" y="68" font-size="8" fill="#ccc">Bit 7</text>
+            <text x="450" y="68" font-size="8" fill="#ccc">Bit 0</text>
+        </svg>
+    </div>
+</div>
+
+<!-- LOGIKSPANNUNG -->
+<div class="karte">
+    <h2>Logikspannung – Warum Kompatibilität wichtig ist</h2>
+    <p>Jedes Gerät hat eine Logikspannung – die Spannung die es als HIGH und LOW versteht. Stimmen die Spannungen nicht überein, werden Daten falsch interpretiert oder der Sensor wird beschädigt.</p>
+
+    <table style="margin-top:8px;">
+        <tr><th>Gerät</th><th>Logikspannung</th><th>Kompatibel mit SCD41?</th></tr>
+        <tr><td>Raspberry Pi 5</td><td>3.3V</td><td class="good">✓ Ja</td></tr>
+        <tr><td>Pimoroni SCD41</td><td>3.3V</td><td class="good">✓ Ja</td></tr>
+        <tr><td>Arduino Uno</td><td>5V</td><td class="warn">✗ Nein – Level Shifter nötig</td></tr>
+    </table>
+
+    <div class="hinweis" style="margin-top:14px;">
+        <strong>Regel:</strong> Vor jedem neuen Bauteil im Datenblatt prüfen welche Logikspannung es erwartet. 5V auf einem 3.3V-Pin kann den Sensor dauerhaft zerstören.
+    </div>
+</div>
+
+<!-- DATENPFAD VOM SENSOR -->
+<div class="karte">
+    <h2>Was passiert wenn sensor.CO2 aufgerufen wird?</h2>
+    <p>Der SCD41 sendet pro Messung <strong>9 Bytes</strong> über SDA: CO₂ (2 Bytes + CRC), Temperatur (2 + CRC), Luftfeuchtigkeit (2 + CRC).</p>
+
+    <svg viewBox="0 0 620 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:620px;margin-top:12px;">
+        <!-- Stufe 1: Sensor -->
+        <rect x="10" y="30" width="110" height="50" rx="5" fill="white" stroke="#ddd" stroke-width="1.5"/>
+        <text x="65" y="52" font-size="10" fill="#333" text-anchor="middle" font-weight="600">SCD41</text>
+        <text x="65" y="66" font-size="9" fill="#999" text-anchor="middle">9 Bytes roh</text>
+        <text x="65" y="78" font-size="9" fill="#3498db" text-anchor="middle">via SDA</text>
+        <!-- Pfeil -->
+        <line x1="120" y1="55" x2="175" y2="55" stroke="#ddd" stroke-width="1.5"/>
+        <polygon points="175,51 183,55 175,59" fill="#ddd"/>
+        <!-- Stufe 2: Bibliothek -->
+        <rect x="183" y="20" width="130" height="70" rx="5" fill="white" stroke="#ddd" stroke-width="1.5"/>
+        <text x="248" y="42" font-size="10" fill="#333" text-anchor="middle" font-weight="600">adafruit_scd4x</text>
+        <text x="248" y="56" font-size="9" fill="#999" text-anchor="middle">1. Bytes zusammensetzen</text>
+        <text x="248" y="68" font-size="9" fill="#999" text-anchor="middle">2. CRC prüfen</text>
+        <text x="248" y="80" font-size="9" fill="#999" text-anchor="middle">3. Umrechnen in ppm/°C/%</text>
+        <!-- Pfeil -->
+        <line x1="313" y1="55" x2="368" y2="55" stroke="#ddd" stroke-width="1.5"/>
+        <polygon points="368,51 376,55 368,59" fill="#ddd"/>
+        <!-- Stufe 3: Python -->
+        <rect x="376" y="30" width="120" height="50" rx="5" fill="white" stroke="#ddd" stroke-width="1.5"/>
+        <text x="436" y="52" font-size="10" fill="#333" text-anchor="middle" font-weight="600">sensor.CO2</text>
+        <text x="436" y="67" font-size="10" fill="#2ecc71" text-anchor="middle">→ 1024</text>
+        <!-- Label -->
+        <text x="65" y="100" font-size="8" fill="#ccc" text-anchor="middle">Sensor</text>
+        <text x="248" y="100" font-size="8" fill="#ccc" text-anchor="middle">Bibliothek (unsichtbar)</text>
+        <text x="436" y="100" font-size="8" fill="#ccc" text-anchor="middle">Dein Python-Code</text>
+    </svg>
+
+    <p style="margin-top:14px;"><strong>CRC</strong> (Cyclic Redundancy Check) ist eine Prüfsumme. Der Sensor berechnet sie aus den Datenbytes und schickt sie mit. Der Pi berechnet sie nochmal aus den empfangenen Bytes und vergleicht. Stimmt es nicht → Messung wird verworfen, kein Absturz.</p>
+
+    <pre style="background:#f5f5f5;padding:12px 16px;border-radius:4px;font-size:0.83rem;color:#555;margin-top:12px;overflow-x:auto;"># Das siehst du in deinem Code später:
+print(sensor.CO2)              # z.B. 1024   (ppm)
+print(sensor.temperature)      # z.B. 21.4   (°C)
+print(sensor.relative_humidity) # z.B. 52.1  (%)</pre>
 </div>
 
 <p style="font-size:0.8rem;color:#bbb;margin-top:8px;">CO₂-Kartierungsroboter · Projekt Ole Meißner · Universität Stuttgart</p>

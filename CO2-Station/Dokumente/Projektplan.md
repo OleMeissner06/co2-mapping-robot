@@ -13,9 +13,9 @@ Entwicklung eines autonomen Roboters, der Räume systematisch abfährt und eine 
 
 | Komponente | Modell | Zweck | Status |
 |---|---|---|---|
-| Hauptrechner | Raspberry Pi 5 Starterkit 4GB (inkl. 64GB SD, Gehäuse, Netzteil, Pi OS) | Steuerung, Datenspeicherung, Dashboard | ✅ Bestellt |
-| CO₂-Sensor | Pimoroni SCD41 Breakout PIM587 (CO₂, Temp., Luftfeuchtigkeit) | Hauptsensor Phase 1+2 | ✅ Bestellt |
-| Verbindungskabel | 40pin Jumper/Dupont Female-Female 0,50m | GPIO-Verbindung Sensor ↔ Pi | ✅ Bestellt |
+| Hauptrechner | Raspberry Pi 5 Starterkit 4GB (inkl. 64GB SD, Gehäuse, Netzteil, Pi OS) | Steuerung, Datenspeicherung, Dashboard | ✅ In Betrieb |
+| CO₂-Sensor | Pimoroni SCD41 Breakout PIM587 (CO₂, Temp., Luftfeuchtigkeit) | Hauptsensor Phase 1+2 | ✅ In Betrieb |
+| Verbindungskabel | 40pin Jumper/Dupont Female-Female 0,50m | GPIO-Verbindung Sensor ↔ Pi | ✅ In Betrieb |
 | Stromversorgung mobil | Powerbank USB-C, min. 20W PD | Phase 2 – mobiler Betrieb | ⬜ Offen |
 | Antrieb | DC-Motoren + Motortreiber (Modell TBD) | Phase 2 | ⬜ Offen |
 | Hinderniserkennung | Ultraschallsensoren HC-SR04 (×3–4) | Phase 2 | ⬜ Offen |
@@ -36,9 +36,9 @@ Ziel: Lauffähiges Messsystem mit Datenspeicherung und Live-Dashboard.
 |---|---|---|
 | M1.1 | Python-Grundlagen: Variablen, Schleifen, Bedingungen | ✅ Abgeschlossen |
 | M1.2 | Funktionen, CSV-Speicherung, Timestamps | ✅ Abgeschlossen |
-| M1.3 | RasPi einrichten, SSH + VS Code Remote | ⬜ Offen (Hardware ausstehend) |
-| M1.4 | SCD-41 anschließen, erste echte Messung | ⬜ Offen |
-| M1.5 | Live-Dashboard im Browser (Flask) | 🔄 In Arbeit – Grundstruktur fertig, Auto-Refresh folgt mit echtem Sensor |
+| M1.3 | RasPi einrichten, SSH + VS Code Remote | ✅ Abgeschlossen (24.06.2026) |
+| M1.4 | SCD-41 anschließen, erste echte Messung | ✅ Abgeschlossen (24.06.2026) |
+| M1.5 | Live-Dashboard im Browser (Flask) | 🔄 In Arbeit – läuft auf Pi, Auto-Refresh + Dauerbetrieb folgen |
 | M1.6 | Dauerbetrieb einrichten (Autostart beim Booten) | ⬜ Offen |
 
 Ergebnis Phase 1: RasPi läuft 24/7, misst CO₂/Temp/Luftfeuchtigkeit, speichert alle Daten mit Timestamp, zeigt Live-Dashboard im Browser.
@@ -86,7 +86,7 @@ Von Anfang an wird der Code modular aufgebaut:
 CO2-Station/
 ├── Skripte/
 │   ├── dashboard.py       # Flask Web-Dashboard
-│   └── (sensor.py)        # Sensorsteuerung, folgt in Phase 1
+│   └── logger.py          # Sensor-Logger (SCD41 → CSV)
 ├── Übungen/
 │   ├── woche1.py
 │   ├── woche2.py

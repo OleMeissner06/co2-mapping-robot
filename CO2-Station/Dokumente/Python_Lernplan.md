@@ -60,7 +60,7 @@ mit Timestamp in eine CSV-Datei schreibt, und nach 60 Sekunden stoppt.
 2. **pip** – Paketmanager für Python-Bibliotheken
 3. **Virtuelle Umgebung** – `python3 -m venv venv` 
 
-### Meilenstein ⬜ Offen
+### Meilenstein ✅ Abgeschlossen (24.06.2026)
 VS Code auf dem Laptop, Verbindung via SSH mit dem Pi,
 und Ausführung des CSV-Programm aus Woche 2 direkt auf dem Pi.
 
@@ -91,9 +91,8 @@ pip install adafruit-circuitpython-scd4x
 2. **Objekte & Methoden** – `sensor.CO2`, `sensor.temperature`, `sensor.relative_humidity`
 3. **try / except** – Fehlerbehandlung falls Sensor nicht antwortet
 
-### Meilenstein ⬜ Offen
-Ein laufendes Programm, das alle 5 Sekunden echte CO₂-, Temperatur- und
-Luftfeuchtigkeitswerte ausgibt und in eine CSV-Datei schreibt.
+### Meilenstein ✅ Abgeschlossen (24.06.2026)
+logger.py läuft auf dem Pi, liest echte CO₂-Werte (892 ppm) vom SCD41 und schreibt in CSV.
 
 ---
 
@@ -105,7 +104,11 @@ Luftfeuchtigkeitswerte ausgibt und in eine CSV-Datei schreibt.
 - Zeigt aktuellen CO₂-Wert mit Ampel, Verlaufsdiagramm (letzte 60 Messungen), Tabelle (letzte 20)
 - Liest aus `messungen.csv`
 
-### Noch offen (folgt nach Woche 3+4)
+### Umgesetzt auf dem Pi (24.06.2026)
+- Dashboard läuft auf dem Pi (logger.py + dashboard.py)
+- Zeigt echte Sensor-Daten live im Browser
+
+### Noch offen
 - Dashboard auf dem Pi laufen lassen
 - Messung und Dashboard parallel als Hintergrundprozesse
 - Auto-Refresh aktivieren

@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # Absoluter Pfad zur CSV-Datei mit den Messdaten
 BASE_DIR = os.path.dirname(__file__)
-CSV_PFAD = os.path.join(BASE_DIR, "..", "Übungen", "messungen.csv")
+CSV_PFAD = os.path.join(BASE_DIR, "messungen.csv")
 
 
 # DATENZUGRIFF

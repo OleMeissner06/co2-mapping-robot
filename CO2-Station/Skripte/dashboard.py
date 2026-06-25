@@ -9,7 +9,8 @@ from flask import Flask
 app = Flask(__name__)
 
 # Absoluter Pfad zur CSV-Datei mit den Messdaten
-CSV_PFAD = r"C:\Users\Admin\Desktop\Projekt\Projekt\CO2-Station\Übungen\messungen.csv"
+BASE_DIR = os.path.dirname(__file__)
+CSV_PFAD = os.path.join(BASE_DIR, "..", "Übungen", "messungen.csv")
 
 
 # DATENZUGRIFF

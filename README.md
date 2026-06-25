@@ -47,7 +47,12 @@ Project Structure
 ```
 CO2-Station/
 ├── Skripte/
-│   └── dashboard.py       # Flask web dashboard
+│   ├── dashboard.py       # Flask web dashboard
+│   └── logger.py          # SCD41 sensor logger (CO₂ → CSV)
+├── Übungen/
+│   ├── woche1.py
+│   ├── woche2.py
+│   └── messungen.csv      # (gitignored)
 └── Dokumente/
     ├── Projektplan.md
     ├── Python_Lernplan.md

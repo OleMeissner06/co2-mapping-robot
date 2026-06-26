@@ -5,6 +5,7 @@
 import csv
 import os
 from flask import Flask
+from flask import jsonify
 
 app = Flask(__name__)
 
@@ -48,7 +49,7 @@ def farbe(bewertung):
 @app.route("/")
 def startseite():
     messungen = lade_messungen()
-
+    
     if not messungen:
         return "<p>Keine Daten vorhanden.</p>"
 
@@ -189,6 +190,26 @@ def startseite():
 
     return html
 
+@app.route("/daten")
+def daten():
+    messungen = lade_messungen()
+    letzte = messungen[-1]
+    aktueller_co2 = letzte[1]
+    aktuelle_bewertung = letzte[2]
+    chart_daten = messungen[-60:]
+    labels = [z[0][11:19] for z in chart_daten]
+    werte = [z[1] for z in chart_daten]
+
+    labels_js = str(labels).replace("'", '"')
+    werte_js = str(werte).replace("'", '"')
+
+
+    return jsonify({
+        "co2": aktueller_co2,
+        "bewertung": aktuelle_bewertung,
+        "labels": labels,
+        "werte": werte,   
+    })
 
 # EINSTIEGSPUNKT
 # Wird nur ausgeführt wenn du diese Datei direkt startest.

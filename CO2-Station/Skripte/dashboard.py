@@ -185,13 +185,13 @@ def startseite():
                 }}
             }}
         }});
-        function farbe(bewertung) {
+        function farbe(bewertung) {{
             if (bewertung.includes("Sehr gut")) return "#2ecc71";
             if (bewertung.includes("Gut"))      return "#27ae60";
             if (bewertung.includes("Mittel"))   return "#f39c12";
             return "#e74c3c";
-        }
-        async function fetchDaten() {
+        }}
+        async function fetchDaten() {{
             const antwort = await fetch('/daten');
             const d = await antwort.json();
             document.getElementById('co2-wert').textContent = d.co2;
@@ -200,7 +200,7 @@ def startseite():
             meinChart.data.labels = d.labels;
             meinChart.data.datasets[0].data = d.werte;
             meinChart.update();
-        } 
+        }} 
         setInterval(fetchDaten, 10000);  
     </script>
 </body>

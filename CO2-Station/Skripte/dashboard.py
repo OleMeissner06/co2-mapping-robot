@@ -134,12 +134,12 @@ def startseite():
     <h1>CO₂-Messstation</h1>
 
     <!-- Aktueller Wert mit Ampel -->
-    <div class="aktuell">
-        <div class="ampel"></div>
+    <div class="aktuell" id="aktuell">
+        <div class="ampel" id="ampel"></div>
         <div>
-            <span class="co2-wert">{aktueller_co2}</span>
+            <span class="co2-wert" id="co2-wert">{aktueller_co2}</span>
             <span class="co2-einheit">ppm CO₂</span>
-            <div class="bewertung">{aktuelle_bewertung}</div>
+            <div class="bewertung" id="bewertung">{aktuelle_bewertung}</div>
         </div>
     </div>
 
@@ -160,7 +160,7 @@ def startseite():
 
     <!-- Chart.js Diagramm: läuft komplett im Browser -->
     <script>
-        new Chart(document.getElementById('chart'), {{
+        let meinChart = new Chart(document.getElementById('chart'), {{
             type: 'line',
             data: {{
                 labels: {labels_js},      // Uhrzeiten auf der X-Achse
@@ -173,6 +173,7 @@ def startseite():
                     tension: 0.3,         // leicht gerundete Kurve
                     fill: false
                 }}]
+         
             }},
             options: {{
                 responsive: true,
@@ -184,6 +185,23 @@ def startseite():
                 }}
             }}
         }});
+        function farbe(bewertung) {
+            if (bewertung.includes("Sehr gut")) return "#2ecc71";
+            if (bewertung.includes("Gut"))      return "#27ae60";
+            if (bewertung.includes("Mittel"))   return "#f39c12";
+            return "#e74c3c";
+        }
+        async function fetchDaten() {
+            const antwort = await fetch('/daten');
+            const d = await antwort.json();
+            document.getElementById('co2-wert').textContent = d.co2;
+            document.getElementById('bewertung').textContent = d.bewertung;
+            document.getElementById('ampel').style.background = farbe(d.bewertung);
+            meinChart.data.labels = d.labels;
+            meinChart.data.datasets[0].data = d.werte;
+            meinChart.update();
+        } 
+        setInterval(fetchDaten, 10000);  
     </script>
 </body>
 </html>"""

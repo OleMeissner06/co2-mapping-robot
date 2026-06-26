@@ -200,9 +200,6 @@ def daten():
     labels = [z[0][11:19] for z in chart_daten]
     werte = [z[1] for z in chart_daten]
 
-    labels_js = str(labels).replace("'", '"')
-    werte_js = str(werte).replace("'", '"')
-
 
     return jsonify({
         "co2": aktueller_co2,

@@ -21,9 +21,9 @@ Entwicklung eines autonomen Roboters, der Räume systematisch abfährt und eine 
 | Hinderniserkennung | Ultraschallsensoren HC-SR04 (×3–4) | Phase 2 | ⬜ Offen |
 | Erweiterung Sensorik | Sensirion SPS30 (PM2.5) + SGP40 (VOC) | Phase 3 | ⬜ Offen |
 
-Hardware-Entscheidungen für Phase 2 und 3 sind vorläufig und werden vor Baubeginn überprüft.
+Hardware-Entscheidungen für Phase 2 und 3 sind vorläufig und werden vor Baubeginn finalisiert.
 
-**Hinweis Sensor-Bibliothek:** Der Pimoroni SCD41 verwendet denselben Sensirion SCD41-Chip wie die Adafruit-Variante. Die Bibliothek `adafruit-circuitpython-scd4x` ist vollständig kompatibel. I2C-Adresse: `0x62`. Verbindung erfolgt über die bestellten Female-Female Jumper-Kabel direkt auf die GPIO-Pins (kein STEMMA QT Kabel nötig).
+**Sensor-Bibliothek:** Der Pimoroni SCD41 (PIM587) verwendet denselben Sensirion SCD41-Chip wie die Adafruit-Variante. Die Bibliothek `adafruit-circuitpython-scd4x` ist vollständig kompatibel. I2C-Adresse: `0x62`. Anschluss über Female-Female Jumper-Kabel direkt an GPIO-Pins (kein STEMMA QT erforderlich).
 
 ---
 
@@ -38,7 +38,7 @@ Ziel: Lauffähiges Messsystem mit Datenspeicherung und Live-Dashboard.
 | M1.2 | Funktionen, CSV-Speicherung, Timestamps | ✅ Abgeschlossen |
 | M1.3 | RasPi einrichten, SSH + VS Code Remote | ✅ Abgeschlossen (24.06.2026) |
 | M1.4 | SCD-41 anschließen, erste echte Messung | ✅ Abgeschlossen (24.06.2026) |
-| M1.5 | Live-Dashboard im Browser (Flask) | 🔄 In Arbeit – läuft auf Pi, Auto-Refresh + Dauerbetrieb folgen |
+| M1.5 | Live-Dashboard im Browser (Flask) | ✅ Abgeschlossen (26.06.2026) |
 | M1.6 | Dauerbetrieb einrichten (Autostart beim Booten) | ⬜ Offen |
 
 Ergebnis Phase 1: RasPi läuft 24/7, misst CO₂/Temp/Luftfeuchtigkeit, speichert alle Daten mit Timestamp, zeigt Live-Dashboard im Browser.
@@ -80,20 +80,18 @@ Ergebnis Phase 3: Vollautonomes System, das unbekannte Räume kartiert, einen Me
 
 ## Softwarearchitektur
 
-Von Anfang an wird der Code modular aufgebaut:
+Der Code ist modular aufgebaut – Sensor-Logger und Dashboard sind strikt getrennt:
 
 ```
 CO2-Station/
 ├── Skripte/
 │   ├── dashboard.py       # Flask Web-Dashboard
 │   └── logger.py          # Sensor-Logger (SCD41 → CSV)
-├── Übungen/
-│   ├── woche1.py
-│   ├── woche2.py
-│   └── messungen.csv
 └── Dokumente/
     ├── Projektplan.md
-    └── Python_Lernplan.md
+    ├── Python_Lernplan.md
+    ├── Kostenübersicht.md
+    └── Elektronik_Cheatsheet.html
 ```
 
 Sensor-Code und Dashboard sind strikt getrennt – das ermöglicht den nahtlosen Übergang von Phase 1 zu Phase 2 ohne Umschreiben.

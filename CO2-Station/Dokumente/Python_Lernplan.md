@@ -1,26 +1,25 @@
 # Python-Lernplan – CO₂-Messstation
+Stand: Juni 2026 · Ole Meißner · Universität Stuttgart, Maschinenbau
 
-
+---
 
 ## Woche 1 – Setup & Python-Grundlagen
-*Ziel: Einfache Programme schreiben und Verständnis der Grundbausteine.*
+*Ziel: Grundlegende Programmierkonzepte anwenden und einfache Programme erstellen.*
 
-### Setup (einmalig, ca. 30 Min.)
-- **VS Code** installieren: https://code.visualstudio.com
-- **Python 3** installieren: https://www.python.org/downloads
+### Setup (einmalig)
+- VS Code installieren: https://code.visualstudio.com
+- Python 3 installieren: https://www.python.org/downloads
 - In VS Code: Extension „Python" (von Microsoft) installieren
-- Ersten Test: eine Datei `hallo.py` anlegen, `print("Hallo Welt")` schreiben, ausführen
 
-### Konzepte dieser Woche
-1. **Variablen & Datentypen** 
+### Konzepte
+1. **Variablen & Datentypen**
 2. **print()** – Ausgabe auf dem Bildschirm
 3. **Rechnen** – `+`, `-`, `*`, `/`, Klammern
-4. **if / elif / else** – Entscheidungen
-5. **while-Schleife** – Endlosschleife für kontinuierliche Messung
+4. **if / elif / else** – Bedingte Ausführung
+5. **while-Schleife** – Iteration für kontinuierliche Messung
 
 ### Meilenstein ✅ Abgeschlossen
-Ein Programm, das eine simulierte CO₂-Zahl einliest, bewertet (gut/mittel/schlecht)
-und eine farblich passende Meldung ausgibt.
+Programm zur Bewertung eines simulierten CO₂-Werts mit kategorisierter Ausgabe.
 
 ---
 
@@ -28,48 +27,40 @@ und eine farblich passende Meldung ausgibt.
 *Ziel: Messdaten strukturiert speichern.*
 
 ### Konzepte
-1. **Funktionen** – `def messe_co2():` – Code in wiederverwendbare Blöcke packen
-2. **Listen & Schleifen** – Messwerte verwalten
-3. **Datum und Uhrzeit** – `import datetime` – Timestamps für jede Messung
-4. **CSV-Dateien schreiben** – `import csv` – Daten tabellarisch speichern
-5. **f-Strings** – `f"CO₂: {wert} ppm"` – Texte dynamisch zusammenbauen
+1. **Funktionen** – `def messe_co2():` – Modularisierung von Code
+2. **Listen & Schleifen** – Verwaltung von Messwerten
+3. **Datum und Uhrzeit** – `import datetime` – Zeitstempel für Messungen
+4. **CSV-Dateien schreiben** – `import csv` – Tabellarische Datenspeicherung
+5. **f-Strings** – `f"CO₂: {wert} ppm"` – Dynamische Zeichenketten
 
 ### Meilenstein ✅ Abgeschlossen
-Ein Programm, das jede Sekunde einen simulierten CO₂-Wert generiert,
-mit Timestamp in eine CSV-Datei schreibt, und nach 60 Sekunden stoppt.
+Programm zur sekündlichen Generierung simulierter CO₂-Werte mit Zeitstempel-Speicherung in CSV.
 
 ---
 
-## Woche 3 – Raspberry Pi & SSH einrichten *(Hardware ausstehend)*
-*Ziel: Arbeit remote auf dem RasPi.*
+## Woche 3 – Raspberry Pi & SSH
+*Ziel: Remote-Entwicklung auf dem Raspberry Pi.*
 
-### Setup RasPi (einmalig, ca. 2 Stunden)
-1. Pi an Monitor + Maus + Tastatur anschließen, booten
-2. WLAN einrichten über Pi OS Desktop
-3. SSH aktivieren: `sudo raspi-config` → Interface Options → SSH → Enable
-4. IP-Adresse des Pi herausfinden: `hostname -I`
-5. Monitor aus, nur noch SSH
-
-### VS Code Remote SSH einrichten
-- Extension „Remote - SSH" in VS Code installieren
-- Verbindung: `ssh ole@<IP-Adresse>`
-- Passwort: Standard ist `raspberry` → ändern mit `passwd`
+### Setup RasPi (einmalig)
+1. SD-Karte mit Raspberry Pi OS flashen (Raspberry Pi Imager)
+2. SSH und WLAN im Imager vorkonfigurieren
+3. Pi booten, SSH-Verbindung herstellen: `ssh ole@raspberrypi.local`
+4. VS Code Remote SSH Extension verbinden
 
 ### Konzepte
 1. **Terminal-Grundlagen** – `ls`, `cd`, `mkdir`, `python3 datei.py`
 2. **pip** – Paketmanager für Python-Bibliotheken
-3. **Virtuelle Umgebung** – `python3 -m venv venv` 
+3. **SSH** – Verschlüsselte Remote-Verbindung
 
 ### Meilenstein ✅ Abgeschlossen (24.06.2026)
-VS Code auf dem Laptop, Verbindung via SSH mit dem Pi,
-und Ausführung des CSV-Programm aus Woche 2 direkt auf dem Pi.
+VS Code Remote SSH verbunden mit Pi (`raspberrypi.local`), Python-Skripte werden direkt auf dem Pi ausgeführt.
 
 ---
 
-## Woche 4 – Echter CO₂-Wert
-*Ziel: Der SCD-41 liefert echte Messdaten.*
+## Woche 4 – Sensorintegration (SCD41)
+*Ziel: Echte CO₂-Messdaten erfassen.*
 
-### Hardware anschließen (I2C, 4 Kabel)
+### Hardware (I2C, 4 Kabel)
 | SCD-41 Pin | RasPi GPIO Pin |
 |------------|----------------|
 | VIN        | Pin 1 (3.3V)   |
@@ -77,69 +68,63 @@ und Ausführung des CSV-Programm aus Woche 2 direkt auf dem Pi.
 | SDA        | Pin 3 (SDA)    |
 | SCL        | Pin 5 (SCL)    |
 
-### Software einrichten
+### Software
 ```bash
-# I2C aktivieren
-sudo raspi-config → Interface Options → I2C → Enable
-
-# Bibliotheken installieren
+sudo raspi-config  # Interface Options → I2C → Enable
 pip install adafruit-circuitpython-scd4x
 ```
 
 ### Konzepte
 1. **Bibliotheken importieren** – `import board`, `import adafruit_scd4x`
 2. **Objekte & Methoden** – `sensor.CO2`, `sensor.temperature`, `sensor.relative_humidity`
-3. **try / except** – Fehlerbehandlung falls Sensor nicht antwortet
+3. **try / except** – Fehlerbehandlung bei Sensor-Kommunikationsfehler
 
 ### Meilenstein ✅ Abgeschlossen (24.06.2026)
-logger.py läuft auf dem Pi, liest echte CO₂-Werte (892 ppm) vom SCD41 und schreibt in CSV.
+`logger.py` läuft auf dem Pi, liest echte CO₂-Werte vom SCD41 und schreibt diese mit Zeitstempel in CSV.
 
 ---
 
-## Woche 5 – Visualisierung & Dashboard 🔄 In Arbeit
-*Ziel: Daten werden live dargestellt.*
+## Woche 5 – Webdashboard & Live-Visualisierung
+*Ziel: Messdaten in Echtzeit im Browser darstellen.*
 
-### Umgesetzt (auf dem Laptop, vor RasPi-Einrichtung)
-- Flask-Dashboard (`dashboard.py`) ist fertig und läuft lokal
-- Zeigt aktuellen CO₂-Wert mit Ampel, Verlaufsdiagramm (letzte 60 Messungen), Tabelle (letzte 20)
-- Liest aus `messungen.csv`
+### Umgesetzt
+- Flask-Dashboard (`dashboard.py`) mit Ampelindikator, Verlaufsdiagramm (letzte 60 Messungen), Datentabelle (letzte 20 Messungen)
+- `logger.py` und `dashboard.py` laufen parallel auf dem Pi
+- AJAX-basierter Auto-Refresh: alle Seitenelemente aktualisieren sich alle 10 Sekunden ohne Seitenneuladen
+- `/daten`-Endpoint (JSON) als Datenschnittstelle zwischen Backend und Browser
 
-### Umgesetzt auf dem Pi (24.06.2026)
-- Dashboard läuft auf dem Pi (logger.py + dashboard.py)
-- Zeigt echte Sensor-Daten live im Browser
+### Konzepte
+1. **Flask** – Python-Webframework, Routing via `@app.route()`
+2. **JSON / jsonify** – Datenaustauschformat zwischen Server und Browser
+3. **AJAX / fetch()** – Asynchrone HTTP-Anfragen ohne Seitenneuladen
+4. **DOM-Manipulation** – `document.getElementById()`, `.textContent`, `.style`
+5. **setInterval()** – Periodische Funktionsausführung im Browser
+6. **async / await** – Asynchrone Programmierung in JavaScript
+7. **Chart.js** – Browser-seitige Diagrammbibliothek
 
-### Noch offen
-- Dashboard auf dem Pi laufen lassen
-- Messung und Dashboard parallel als Hintergrundprozesse
-- Auto-Refresh aktivieren
-
-### Meilenstein ⬜ Vollständig abgeschlossen wenn:
-Live Dashboard über den Browser von den Messdaten.
-
----
-
-## Ressourcen (alle kostenlos)
-
-- **Python lernen:** https://docs.python.org/3/tutorial/ (offizielle Doku, sehr gut)
-- **Adafruit SCD-41 Guide:** https://learn.adafruit.com/adafruit-scd-40-and-scd-41
-- **RasPi GPIO Pinout:** https://pinout.xyz
-- **SSH in VS Code:** https://code.visualstudio.com/docs/remote/ssh
+### Meilenstein ✅ Abgeschlossen (26.06.2026)
+Dashboard läuft auf dem Pi mit vollständigem Auto-Refresh: CO₂-Wert, Bewertung, Ampel, Diagramm und Tabelle aktualisieren sich alle 10 Sekunden per AJAX.
 
 ---
 
-## CO₂-Referenzwerte (zum Einordnen der späteren Daten)
+## Ressourcen
 
-| Bereich | Bewertung |
-|---------|-----------|
-| < 800 ppm | Sehr gut – frische Außenluft |
+- Python-Dokumentation: https://docs.python.org/3/tutorial/
+- Adafruit SCD-41 Guide: https://learn.adafruit.com/adafruit-scd-40-and-scd-41
+- Raspberry Pi GPIO Pinout: https://pinout.xyz
+- SSH in VS Code: https://code.visualstudio.com/docs/remote/ssh
+- Flask-Dokumentation: https://flask.palletsprojects.com/
+
+---
+
+## CO₂-Referenzwerte
+
+| Konzentration | Bewertung |
+|---------------|-----------|
+| < 800 ppm | Sehr gut – Außenluftqualität |
 | 800–1000 ppm | Gut |
-| 1000–1400 ppm | Mittel – Lüften empfohlen |
-| 1400–2000 ppm | Schlecht – dringend lüften |
+| 1000–1400 ppm | Mittel – Lüftung empfohlen |
+| 1400–2000 ppm | Schlecht – Lüftung erforderlich |
 | > 2000 ppm | Sehr schlecht – gesundheitlich relevant |
 
-*Außenluft hat typischerweise ~420 ppm (2024). In schlecht gelüfteten Altbauwohnungen
-wurden Werte über 3000 ppm gemessen.*
-
----
-
-*Dieser Plan ist ein lebendiges Dokument - Anpassungen folgen nach Fortschritt*
+Außenluft: typischerweise ~420 ppm (Stand 2024). In unzureichend belüfteten Räumen wurden Werte über 3000 ppm gemessen.

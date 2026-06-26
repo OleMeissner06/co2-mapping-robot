@@ -154,7 +154,9 @@ def startseite():
         <h2>Letzte Messungen</h2>
         <table>
             <tr><th>Zeitstempel</th><th>CO₂ (ppm)</th><th>Bewertung</th></tr>
-            {tabelle_zeilen}
+            <tbody id="tabelle-body">
+                {tabelle_zeilen}
+            </tbody>    
         </table>
     </div>
 
@@ -200,6 +202,12 @@ def startseite():
             meinChart.data.labels = d.labels;
             meinChart.data.datasets[0].data = d.werte;
             meinChart.update();
+            let html = '';
+            d.tabelle.slice().reverse().forEach(z => {{
+                const f = farbe(z[2]);
+                html += `<tr><td>${{z[0]}}</td><td>${{z[1]}}</td><td style="color:${{f}};font-weight:600">${{z[2]}}</td></tr>`;
+            }});
+            document.getElementById('tabelle-body').innerHTML = html;
         }} 
         setInterval(fetchDaten, 10000);  
     </script>
@@ -223,7 +231,8 @@ def daten():
         "co2": aktueller_co2,
         "bewertung": aktuelle_bewertung,
         "labels": labels,
-        "werte": werte,   
+        "werte": werte,
+        "tabelle": messungen[-20:]   
     })
 
 # EINSTIEGSPUNKT

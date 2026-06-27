@@ -68,6 +68,10 @@ def startseite():
             <span class="co2-wert" id="co2-wert">{aktueller_co2}</span>
             <span class="co2-einheit">ppm CO₂</span>
             <div class="bewertung" id="bewertung">{aktuelle_bewertung}</div>
+            <span id="temperatur">{letzte[3]}</span>
+            <span> °C · </span>
+            <span id="feuchte">{letzte[4]}</span>
+            <span> % Luftfeuchtigkeit</span>
         </div>
     </div>
 
@@ -84,6 +88,8 @@ def startseite():
             document.getElementById('co2-wert').textContent = d.co2;
             document.getElementById('bewertung').textContent = d.bewertung;
             document.getElementById('ampel').style.background = farbe(d.bewertung);
+            document.getElementById('temperatur').textContent = d.temperatur;
+            document.getElementById('feuchte').textContent = d.feuchte
         }}
         setInterval(fetchDaten, 10000);
     </script>
@@ -100,6 +106,8 @@ def daten():
     return jsonify({
         "co2": letzte[1],
         "bewertung": letzte[2],
+        "temperatur": letzte[3],
+        "feuchte": letzte[4]
     })
 
 

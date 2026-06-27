@@ -15,7 +15,7 @@ Phases
 Phase 1 – Stationary CO₂ Station (current)
 - Raspberry Pi 5 with Pimoroni SCD41 sensor (CO₂, temperature, humidity)
 - Continuous data logging to CSV with timestamps
-- Live web dashboard (Flask + Chart.js) accessible via browser
+- Live web dashboard (Flask) with AJAX auto-refresh, accessible via browser
 
 Phase 2 – Mobile Rover (planned)
 - Self-constructed chassis with DC motors
@@ -39,7 +39,6 @@ Software
 
 - Python 3
 - Flask (web dashboard)
-- Chart.js (browser-side visualization)
 - adafruit-circuitpython-scd4x (sensor library)
 
 Project Structure

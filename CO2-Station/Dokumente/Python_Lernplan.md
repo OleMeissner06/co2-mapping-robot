@@ -88,10 +88,9 @@ pip install adafruit-circuitpython-scd4x
 *Ziel: Messdaten in Echtzeit im Browser darstellen.*
 
 ### Umgesetzt
-- Flask-Dashboard (`dashboard.py`) mit Ampelindikator, Verlaufsdiagramm (letzte 60 Messungen), Datentabelle (letzte 20 Messungen)
+- Flask-Dashboard (`dashboard.py`) mit Live-Anzeige: CO₂-Wert, Ampelindikator, Bewertung
 - `logger.py` und `dashboard.py` laufen parallel auf dem Pi
-- AJAX-basierter Auto-Refresh: alle Seitenelemente aktualisieren sich alle 10 Sekunden ohne Seitenneuladen
-- `/daten`-Endpoint (JSON) als Datenschnittstelle zwischen Backend und Browser
+- AJAX-basierter Auto-Refresh alle 10 Sekunden über `/daten`-Endpoint (JSON)
 
 ### Konzepte
 1. **Flask** – Python-Webframework, Routing via `@app.route()`
@@ -100,10 +99,9 @@ pip install adafruit-circuitpython-scd4x
 4. **DOM-Manipulation** – `document.getElementById()`, `.textContent`, `.style`
 5. **setInterval()** – Periodische Funktionsausführung im Browser
 6. **async / await** – Asynchrone Programmierung in JavaScript
-7. **Chart.js** – Browser-seitige Diagrammbibliothek
 
 ### Meilenstein ✅ Abgeschlossen (26.06.2026)
-Dashboard läuft auf dem Pi mit vollständigem Auto-Refresh: CO₂-Wert, Bewertung, Ampel, Diagramm und Tabelle aktualisieren sich alle 10 Sekunden per AJAX.
+Dashboard läuft auf dem Pi, zeigt aktuellen CO₂-Wert mit Ampel und Bewertung, aktualisiert sich alle 10 Sekunden per AJAX.
 
 ---
 

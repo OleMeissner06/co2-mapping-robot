@@ -105,6 +105,27 @@ Dashboard läuft auf dem Pi, zeigt CO₂-Wert mit Ampel und Bewertung sowie Temp
 
 ---
 
+## Woche 6 – Autostart & Dauerbetrieb (systemd)
+*Ziel: Pi läuft vollständig autonom – kein manuelles Starten nötig.*
+
+### Umgesetzt
+- Zwei systemd-Service-Dateien erstellt: `co2-logger.service` und `co2-dashboard.service`
+- Logger startet nach `local-fs.target`, Dashboard nach Logger (`After=` + `Wants=`)
+- Beide Dienste mit `systemctl enable` aktiviert → starten automatisch beim Booten
+- Getestet: Pi neugestartet, beide Dienste liefen sofort – auch ohne vorhandene CSV
+
+### Konzepte
+1. **systemd** – Dienst-Manager unter Linux, startet alle Hintergrunddienste beim Booten
+2. **Service-Datei** – Textdatei mit drei Abschnitten: `[Unit]`, `[Service]`, `[Install]`
+3. **`After=` / `Wants=`** – Abhängigkeiten zwischen Diensten definieren
+4. **`ExecStart=`** – absoluter Pfad zu Python + Skript (systemd kennt keine `PATH`-Variable)
+5. **`systemctl enable/start/stop/status`** – Dienste verwalten
+
+### Meilenstein ✅ Abgeschlossen (28.06.2026)
+Pi startet vollständig autonom: Logger und Dashboard laufen nach dem Booten ohne manuellen Eingriff. Phase 1 abgeschlossen.
+
+---
+
 ## Ressourcen
 
 - Python-Dokumentation: https://docs.python.org/3/tutorial/

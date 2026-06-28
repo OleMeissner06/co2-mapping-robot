@@ -39,9 +39,9 @@ Ziel: Lauffähiges Messsystem mit Datenspeicherung und Live-Dashboard.
 | M1.3 | RasPi einrichten, SSH + VS Code Remote | ✅ Abgeschlossen (24.06.2026) |
 | M1.4 | SCD-41 anschließen, erste echte Messung | ✅ Abgeschlossen (24.06.2026) |
 | M1.5 | Live-Dashboard im Browser (Flask) | ✅ Abgeschlossen (26.06.2026) |
-| M1.6 | Dauerbetrieb einrichten (Autostart beim Booten) | ⬜ Offen |
+| M1.6 | Dauerbetrieb einrichten (Autostart beim Booten) | ✅ Abgeschlossen (28.06.2026) |
 
-Ergebnis Phase 1: RasPi läuft 24/7, misst CO₂/Temp/Luftfeuchtigkeit, speichert alle Daten mit Timestamp, zeigt Live-Dashboard im Browser.
+Ergebnis Phase 1: RasPi läuft 24/7, misst CO₂/Temp/Luftfeuchtigkeit, speichert alle Daten mit Timestamp, zeigt Live-Dashboard im Browser. Logger und Dashboard starten automatisch beim Booten via systemd.
 
 ---
 
@@ -92,6 +92,10 @@ CO2-Station/
     ├── Python_Lernplan.md
     ├── Kostenübersicht.md
     └── Elektronik_Cheatsheet.html
+
+/etc/systemd/system/          # auf dem Raspberry Pi (nicht im Repo)
+├── co2-logger.service        # Autostart logger.py beim Booten
+└── co2-dashboard.service     # Autostart dashboard.py (nach Logger)
 ```
 
 Sensor-Code und Dashboard sind strikt getrennt – das ermöglicht den nahtlosen Übergang von Phase 1 zu Phase 2 ohne Umschreiben.

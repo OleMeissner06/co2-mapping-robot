@@ -1,6 +1,3 @@
-# CO2-Messstation Dashboard
-#http://raspberrypi.local:5000
-
 import csv
 import os
 from flask import Flask, jsonify
@@ -10,14 +7,12 @@ app = Flask(__name__)
 BASE_DIR = os.path.dirname(__file__)
 CSV_PFAD = os.path.join(BASE_DIR, "messungen.csv")
 
-
 def lade_messungen():
     if not os.path.exists(CSV_PFAD):
         return []
     with open(CSV_PFAD, encoding="utf-8") as datei:
         zeilen = list(csv.reader(datei))
     return zeilen[1:]
-
 
 def farbe(bewertung):
     if "Sehr gut" in bewertung:
@@ -28,7 +23,6 @@ def farbe(bewertung):
         return "#f39c12"
     else:
         return "#e74c3c"
-
 
 @app.route("/")
 def startseite():
@@ -98,7 +92,6 @@ def startseite():
 
     return html
 
-
 @app.route("/daten")
 def daten():
     messungen = lade_messungen()
@@ -109,7 +102,6 @@ def daten():
         "temperatur": letzte[3],
         "feuchte": letzte[4]
     })
-
 
 if __name__ == "__main__":
     app.run(debug=True)

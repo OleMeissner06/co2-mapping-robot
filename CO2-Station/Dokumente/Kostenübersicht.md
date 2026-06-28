@@ -7,9 +7,9 @@ Stand: Juni 2026 · Alle Preise inkl. MwSt.
 
 | Artikel | Modell / Nr. | Händler | Preis | Status |
 |---|---|---|---|---|
-| Raspberry Pi 5 Starterkit 4GB | BB-RPK5S-4-B (inkl. 64GB SD, Gehäuse, Netzteil, Pi OS) | Berrybase | 171,90 € | ✅ Bestellt |
-| CO₂-Sensor Breakout | Pimoroni SCD41 PIM587 | Berrybase | 49,90 € | ✅ Bestellt |
-| Jumper-Kabel Female-Female 0,5m | DUPK-40-FF-50 | Berrybase | 2,20 € | ✅ Bestellt |
+| Raspberry Pi 5 Starterkit 4GB | BB-RPK5S-4-B (inkl. 64GB SD, Gehäuse, Netzteil, Pi OS) | Berrybase | 171,90 € | ✅ In Betrieb |
+| CO₂-Sensor Breakout | Pimoroni SCD41 PIM587 | Berrybase | 49,90 € | ✅ In Betrieb |
+| Jumper-Kabel Female-Female 0,5m | DUPK-40-FF-50 | Berrybase | 2,20 € | ✅ In Betrieb |
 | **Versand** | | Berrybase | kostenlos | ✅ |
 | **Summe Phase 1** | | | **224,00 €** | |
 

@@ -293,6 +293,46 @@ print(sensor.temperature)      # z.B. 21.4   (°C)
 print(sensor.relative_humidity) # z.B. 52.1  (%)</pre>
 </div>
 
+<!-- SYSTEMD -->
+<div class="karte">
+    <h2>systemd – Autostart unter Linux</h2>
+    <p>systemd ist der Dienst-Manager unter Linux. Er startet beim Booten alle Hintergrunddienste – SSH, WLAN, und nach unserer Konfiguration auch <code>logger.py</code> und <code>dashboard.py</code>. Ein Dienst wird als einfache Textdatei (<code>.service</code>) definiert.</p>
+
+    <p style="margin-top:14px;"><strong>Aufbau einer Service-Datei:</strong></p>
+    <pre style="background:#f5f5f5;padding:12px 16px;border-radius:4px;font-size:0.83rem;color:#555;margin-top:8px;overflow-x:auto;">[Unit]
+Description=CO2 Logger          # Name des Dienstes
+After=local-fs.target           # Erst starten wenn Dateisystem bereit ist
+
+[Service]
+ExecStart=/usr/bin/python3 /home/ole/co2-mapping-robot/CO2-Station/Skripte/logger.py
+WorkingDirectory=/home/ole/co2-mapping-robot/CO2-Station/Skripte/
+User=ole                        # Als Nutzer ole ausführen, nicht als root
+Restart=on-failure              # Neustart bei Absturz
+
+[Install]
+WantedBy=multi-user.target      # Bei normalem Boot aktivieren</pre>
+
+    <div class="hinweis" style="margin-top:14px;">
+        <strong>Wichtig:</strong> systemd kennt keine <code>PATH</code>-Variable. Deshalb immer den <strong>absoluten Pfad</strong> zu Python angeben (<code>/usr/bin/python3</code>), nicht nur <code>python3</code>.
+    </div>
+
+    <p style="margin-top:16px;"><strong>Abhängigkeit zwischen Diensten</strong> – das Dashboard braucht den Logger:</p>
+    <pre style="background:#f5f5f5;padding:12px 16px;border-radius:4px;font-size:0.83rem;color:#555;margin-top:8px;overflow-x:auto;">[Unit]
+After=local-fs.target co2-logger.service   # Warten bis Logger läuft
+Wants=co2-logger.service                   # Logger als Abhängigkeit markieren</pre>
+
+    <p style="margin-top:16px;"><strong>Die wichtigsten Befehle:</strong></p>
+    <table style="margin-top:8px;">
+        <tr><th>Befehl</th><th>Bedeutung</th></tr>
+        <tr><td><code>sudo systemctl enable co2-logger.service</code></td><td>Autostart beim Booten aktivieren</td></tr>
+        <tr><td><code>sudo systemctl start co2-logger.service</code></td><td>Dienst jetzt sofort starten</td></tr>
+        <tr><td><code>sudo systemctl stop co2-logger.service</code></td><td>Dienst stoppen (bleibt enabled)</td></tr>
+        <tr><td><code>sudo systemctl status co2-logger.service</code></td><td>Status & Logs anzeigen</td></tr>
+    </table>
+
+    <p style="margin-top:14px;">Service-Dateien liegen unter <code>/etc/systemd/system/</code> und werden mit <code>sudo nano</code> erstellt. Das Projekt nutzt zwei: <code>co2-logger.service</code> und <code>co2-dashboard.service</code>.</p>
+</div>
+
 <p style="font-size:0.8rem;color:#bbb;margin-top:8px;">CO₂-Kartierungsroboter · Projekt Ole Meißner · Universität Stuttgart</p>
 
 </body>

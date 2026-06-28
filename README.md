@@ -2,7 +2,7 @@
 
 Autonomous robot for spatial CO₂ air quality mapping — built from scratch as a personal engineering project.
 
-Status: Phase 1 in progress · Raspberry Pi 5 + Pimoroni SCD41 · Python · Flask
+Status: Phase 1 complete · Phase 2 planned · Raspberry Pi 5 + Pimoroni SCD41 · Python · Flask
 
 ---
 
@@ -12,10 +12,11 @@ A self-navigating robot that systematically maps CO₂ concentration across room
 
 Phases
 
-Phase 1 – Stationary CO₂ Station (current)
+Phase 1 – Stationary CO₂ Station ✅ Complete
 - Raspberry Pi 5 with Pimoroni SCD41 sensor (CO₂, temperature, humidity)
 - Continuous data logging to CSV with timestamps
 - Live web dashboard (Flask) with AJAX auto-refresh, accessible via browser
+- Fully autonomous operation: logger and dashboard autostart on boot via systemd
 
 Phase 2 – Mobile Rover (planned)
 - Self-constructed chassis with DC motors
